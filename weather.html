@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #2193b0, #6dd5ed);
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    #search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    input {
+      padding: 10px;
+      width: 300px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .weather-info {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 400px;
+      text-align: left;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .weather-info h2 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .weather-info p {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather Dashboard</h1>
+  <div id="search-box">
+    <input type="text" id="city-input" placeholder="Enter city name">
+    <button id="search-btn">Search</button>
+  </div>
+
+  <div id="weather-output" class="weather-info" style="display: none;">
+    <h2 id="city-name"></h2>
+    <p><strong>Temperature:</strong> <span id="temperature"></span> °C</p>
+    <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
+    <p><strong>Weather:</strong> <span id="weather"></span></p>
+    <p><strong>Wind Speed:</strong> <span id="wind-speed"></span> m/s</p>
+  </div>
+
+  <footer>
+    &copy; 2024 Weather Dashboard. Built  by Arul.
+  </footer>
+
+  <script>
+    document.getElementById("search-btn").addEventListener("click", function() {
+      const city = document.getElementById("city-input").value;
+      const apiKey = "YOUR_API_KEY"; // Replace with your OpenWeatherMap API key
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("City not found");
+          }
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById("weather-output").style.display = "block";
+          document.getElementById("city-name").textContent = data.name;
+          document.getElementById("temperature").textContent = data.main.temp;
+          document.getElementById("humidity").textContent = data.main.humidity;
+          document.getElementById("weather").textContent = data.weather[0].description;
+          document.getElementById("wind-speed").textContent = data.wind.speed;
+        })
+        .catch(error => {
+          alert("Error: " + error.message);
+          document.getElementById("weather-output").style.display = "none";
+        });
+    });
+  </script>
+</body>
+</html>
